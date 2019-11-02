@@ -1,0 +1,12 @@
+
+POST http://localhost:5000
+Content-Type: application/json
+
+{ "key" : "value" }
+
+###
+
+POST http://localhost:5000/http2file
+Content-Type: text/plain
+
+{ "key" : "value" }
