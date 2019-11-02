@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System;
 
 namespace HttpFile.Controllers
 {
@@ -23,7 +24,10 @@ namespace HttpFile.Controllers
 			System.Console.WriteLine("Http2File() was called. ---BEGIN---");
 			using (StreamReader r = new StreamReader(Request.Body, Encoding.UTF8))
 			{  
-				System.Console.WriteLine(await r.ReadToEndAsync());
+				string filename = DateTime.Now.ToOADate().ToString() + ".json";
+				string body = await r.ReadToEndAsync();
+				System.IO.File.WriteAllText(filename,body);
+				Console.WriteLine(await r.ReadToEndAsync());
 			}
 			System.Console.WriteLine("Http2File() was called. ---END---");
 			return Ok();
