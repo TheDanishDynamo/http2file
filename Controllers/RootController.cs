@@ -6,11 +6,19 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System;
+using Microsoft.Extensions.Configuration;
 
-namespace HttpFile.Controllers
+namespace Http2File.Controllers
 {
 	public class RootController : Controller
 	{
+		private readonly IConfiguration _config;
+
+		public RootController(IConfiguration config)
+		{
+			_config = config;
+		}
+
 		[HttpPost]
 		public ActionResult Index()
 		{
@@ -21,15 +29,14 @@ namespace HttpFile.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Http2File()
 		{
-			System.Console.WriteLine("Http2File() was called. ---BEGIN---");
 			using (StreamReader r = new StreamReader(Request.Body, Encoding.UTF8))
 			{  
 				string filename = DateTime.Now.ToOADate().ToString() + ".json";
+				string folder = _config.GetValue<string>("Output.Folder");
+				string fullpath = Path.Combine(folder,filename);
 				string body = await r.ReadToEndAsync();
-				System.IO.File.WriteAllText(filename,body);
-				Console.WriteLine(await r.ReadToEndAsync());
+				System.IO.File.WriteAllText(fullpath,body);
 			}
-			System.Console.WriteLine("Http2File() was called. ---END---");
 			return Ok();
 		}	
 	}
